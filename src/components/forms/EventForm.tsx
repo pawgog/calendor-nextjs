@@ -1,7 +1,24 @@
+"use client";
+
 import { useForm } from "react-hook-form";
+import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { eventFormSchema } from "@/schema/events";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Switch } from "../ui/switch";
+import { Textarea } from "../ui/textarea";
+import { Button } from "../ui/button";
+import { Label } from "../ui/label";
 
 export function EventForm() {
   const form = useForm<z.infer<typeof eventFormSchema>>({
@@ -11,5 +28,93 @@ export function EventForm() {
       durationInMinutes: 30,
     },
   });
-  return null;
+
+  async function onSubmit(values: z.infer<typeof eventFormSchema>) {
+    console.log("onSubmit");
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex gap-6 flex-col"
+      >
+        {form.formState.errors.root && (
+          <div className="text-destructive text-sm">
+            {form.formState.errors.root.message}
+          </div>
+        )}
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Event Name</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription>
+                The name users will see when booking
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="durationInMinutes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Duration</FormLabel>
+              <FormControl>
+                <Input type="number" {...field} />
+              </FormControl>
+              <FormDescription>In minutes</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea className="resize-none h-32" {...field} />
+              </FormControl>
+              <FormDescription>
+                Optional description of the event
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="isActive"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center gap-2">
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormLabel>Active</FormLabel>
+              </div>
+              <FormDescription>
+                Inactive events will not be visible for users to book
+              </FormDescription>
+            </FormItem>
+          )}
+        />
+        <Button type="button" asChild variant="outline">
+          <Link href="/events">Cancel</Link>
+        </Button>
+        <Button type="submit">Save</Button>
+      </form>
+    </Form>
+  );
 }

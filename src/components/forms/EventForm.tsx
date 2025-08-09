@@ -5,6 +5,7 @@ import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { eventFormSchema } from "@/schema/events";
+import { createEvent } from "@/server/actions/events";
 import {
   Form,
   FormControl,
@@ -18,7 +19,6 @@ import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
-import { Label } from "../ui/label";
 
 export function EventForm() {
   const form = useForm<z.infer<typeof eventFormSchema>>({
@@ -30,7 +30,7 @@ export function EventForm() {
   });
 
   async function onSubmit(values: z.infer<typeof eventFormSchema>) {
-    console.log("onSubmit");
+    await createEvent(values);
   }
 
   return (

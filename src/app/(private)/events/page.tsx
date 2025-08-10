@@ -4,6 +4,16 @@ import { auth } from "@clerk/nextjs/server";
 import { CalendarPlus, CalendarRange } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { formatEventDescription } from "@/lib/formatters";
 
 export default async function EventsPage() {
   const { userId, redirectToSignIn } = await auth();
@@ -29,7 +39,9 @@ export default async function EventsPage() {
       </div>
       {events.length > 0 ? (
         <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(400px,1fr))]">
-          <div className="grid gap-4">Events</div>
+          {events.map((event) => (
+            <EventCard key={event.id} {...event} />
+          ))}
         </div>
       ) : (
         <div className="flex flex-col items-center gap-4">
@@ -44,5 +56,42 @@ export default async function EventsPage() {
         </div>
       )}
     </>
+  );
+}
+
+type EventCardProps = {
+  id: string;
+  isActive: boolean;
+  name: string;
+  description: string | null;
+  durationInMinutes: number;
+};
+
+function EventCard({
+  id,
+  isActive,
+  name,
+  description,
+  durationInMinutes,
+}: EventCardProps) {
+  return (
+    <Card className={cn("flex flex-col", !isActive && "border-secondary/50")}>
+      <CardHeader className={cn(!isActive && "opacity-50")}>
+        <CardTitle>{name}</CardTitle>
+        <CardDescription>
+          {formatEventDescription(durationInMinutes)}
+        </CardDescription>
+      </CardHeader>
+      {description != null && (
+        <CardContent className={cn(!isActive && "opacity-50")}>
+          {description}
+        </CardContent>
+      )}
+      <CardFooter className="flex justify-end gap-2 mt-auto">
+        <Button asChild>
+          <Link href={`/events/${id}/edit`}>Edit</Link>
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }

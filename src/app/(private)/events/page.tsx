@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { formatEventDescription } from "@/lib/formatters";
+import { CopyEventButton } from "@/components/CopyEventButton";
 
 export default async function EventsPage() {
   const { userId, redirectToSignIn } = await auth();
@@ -65,6 +66,7 @@ type EventCardProps = {
   name: string;
   description: string | null;
   durationInMinutes: number;
+  clerkUserId: string;
 };
 
 function EventCard({
@@ -73,6 +75,7 @@ function EventCard({
   name,
   description,
   durationInMinutes,
+  clerkUserId,
 }: EventCardProps) {
   return (
     <Card className={cn("flex flex-col", !isActive && "border-secondary/50")}>
@@ -88,6 +91,13 @@ function EventCard({
         </CardContent>
       )}
       <CardFooter className="flex justify-end gap-2 mt-auto">
+        {isActive && (
+          <CopyEventButton
+            variants="outline"
+            eventId={id}
+            clerkUserId={clerkUserId}
+          />
+        )}
         <Button asChild>
           <Link href={`/events/${id}/edit`}>Edit</Link>
         </Button>

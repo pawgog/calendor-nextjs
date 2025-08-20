@@ -93,7 +93,7 @@ function EventCard({
       <CardFooter className="flex justify-end gap-2 mt-auto">
         {isActive && (
           <CopyEventButton
-            variants="outline"
+            variant="outline"
             eventId={id}
             clerkUserId={clerkUserId}
           />

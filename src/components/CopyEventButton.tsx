@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, buttonVariants } from "./ui/button";
+import { Button, ButtonProps } from "./ui/button";
 import { Copy, CopyCheck, CopyX } from "lucide-react";
 
 type CopyState = "idle" | "copied" | "error";
@@ -10,7 +10,7 @@ export function CopyEventButton({
   eventId,
   clerkUserId,
   ...buttonProps
-}: Omit<typeof buttonVariants, "children" | "onClick"> & {
+}: Omit<ButtonProps, "children" | "onClick"> & {
   eventId: string;
   clerkUserId: string;
 }) {

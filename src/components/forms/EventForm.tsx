@@ -34,6 +34,8 @@ export function EventForm({
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: event ?? {
+      name: "",
+      description: "",
       isActive: true,
       durationInMinutes: 30,
     },

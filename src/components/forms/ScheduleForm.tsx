@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -23,6 +23,8 @@ import {
   SelectValue,
 } from "../ui/select";
 import { formatTimezoneOffset } from "@/lib/formatters";
+import { Fragment } from "react";
+import { Plus } from "lucide-react";
 
 type Availability = {
   startTime: string;
@@ -47,6 +49,11 @@ export function ScheduleForm({
         return timeToInt(a.startTime) - timeToInt(b.startTime);
       }),
     },
+  });
+
+  const { append: addAvailability } = useFieldArray({
+    name: "availabilities",
+    control: form.control,
   });
 
   async function onSubmit() {
@@ -89,6 +96,31 @@ export function ScheduleForm({
             </FormItem>
           )}
         />
+        <div className="grid grid-cols-[auto,1fr] gap-y-6 gap-x-4">
+          {DAYS_OF_WEEK_IN_ORDER.map((dayOfWeek) => (
+            <Fragment key={dayOfWeek}>
+              <div className="capitalize text-sm font-semibold">
+                {dayOfWeek.substring(0, 3)}
+              </div>
+              <div className="flex flex-col gap-2">
+                <Button
+                  type="button"
+                  className="size-6 p-1"
+                  variant="outline"
+                  onClick={() => {
+                    addAvailability({
+                      dayOfWeek,
+                      startTime: "9:00",
+                      endTime: "17:00",
+                    });
+                  }}
+                >
+                  <Plus className="size-full" />
+                </Button>
+              </div>
+            </Fragment>
+          ))}
+        </div>
         <div className="flex gap-2 justify-end">
           <Button disabled={form.formState.isSubmitting} type="submit">
             Save

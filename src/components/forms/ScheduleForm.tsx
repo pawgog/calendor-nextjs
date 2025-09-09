@@ -1,7 +1,9 @@
 "use client";
 
+import { Fragment } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
+import { Plus, X } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -23,8 +25,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { formatTimezoneOffset } from "@/lib/formatters";
-import { Fragment } from "react";
-import { Plus } from "lucide-react";
+import { Input } from "../ui/input";
 
 type Availability = {
   startTime: string;
@@ -51,10 +52,16 @@ export function ScheduleForm({
     },
   });
 
-  const { append: addAvailability } = useFieldArray({
-    name: "availabilities",
-    control: form.control,
-  });
+  const {
+    append: addAvailability,
+    remove: removeAvailability,
+    fields: availabilityFields,
+  } = useFieldArray({ name: "availabilities", control: form.control });
+
+  const groupedAvailabilityFields = Object.groupBy(
+    availabilityFields.map((field, index) => ({ ...field, index })),
+    (availability) => availability.dayOfWeek
+  );
 
   async function onSubmit() {
     return null;
@@ -117,6 +124,78 @@ export function ScheduleForm({
                 >
                   <Plus className="size-full" />
                 </Button>
+                {groupedAvailabilityFields[dayOfWeek]?.map(
+                  (field, labelIndex) => (
+                    <div className="flex flex-col gap-1" key={field.id}>
+                      <div className="flex gap-2 items-center">
+                        <FormField
+                          control={form.control}
+                          name={`availabilities.${field.index}.startTime`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  className="w-24"
+                                  aria-label={`${dayOfWeek} Start Time ${
+                                    labelIndex + 1
+                                  }`}
+                                  {...field}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                        -
+                        <FormField
+                          control={form.control}
+                          name={`availabilities.${field.index}.endTime`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  className="w-24"
+                                  aria-label={`${dayOfWeek} End Time ${
+                                    labelIndex + 1
+                                  }`}
+                                  {...field}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                        <Button
+                          type="button"
+                          className="size-6 p-1"
+                          variant="destructiveGhost"
+                          onClick={() => removeAvailability(field.index)}
+                        >
+                          <X />
+                        </Button>
+                      </div>
+                      <FormMessage>
+                        {
+                          form.formState.errors.availabilities?.at?.(
+                            field.index
+                          )?.root?.message
+                        }
+                      </FormMessage>
+                      <FormMessage>
+                        {
+                          form.formState.errors.availabilities?.at?.(
+                            field.index
+                          )?.startTime?.message
+                        }
+                      </FormMessage>
+                      <FormMessage>
+                        {
+                          form.formState.errors.availabilities?.at?.(
+                            field.index
+                          )?.endTime?.message
+                        }
+                      </FormMessage>
+                    </div>
+                  )
+                )}
               </div>
             </Fragment>
           ))}

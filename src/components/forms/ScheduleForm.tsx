@@ -63,8 +63,16 @@ export function ScheduleForm({
     (availability) => availability.dayOfWeek
   );
 
-  async function onSubmit() {
-    return null;
+  async function onSubmit(values: z.infer<typeof scheduleFormSchema>) {
+    const data = await saveSchedule(values);
+
+    if (data?.error) {
+      form.setError("root", {
+        message: "There was an error saving your schedule",
+      });
+    } else {
+      setSuccessMessage("Schedule saved!");
+    }
   }
 
   return (

@@ -26,6 +26,7 @@ import {
 } from "../ui/select";
 import { formatTimezoneOffset } from "@/lib/formatters";
 import { Input } from "../ui/input";
+import { saveSchedule } from "@/server/actions/schedule";
 
 type Availability = {
   startTime: string;
@@ -70,8 +71,6 @@ export function ScheduleForm({
       form.setError("root", {
         message: "There was an error saving your schedule",
       });
-    } else {
-      setSuccessMessage("Schedule saved!");
     }
   }
 

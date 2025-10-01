@@ -1,6 +1,7 @@
 "use client";
 
-import { Fragment } from "react";
+import "core-js/proposals/array-grouping-v2";
+import { Fragment, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Plus, X } from "lucide-react";
@@ -42,6 +43,7 @@ export function ScheduleForm({
     availabilities: Availability[];
   };
 }) {
+  const [successMessage, setSuccessMessage] = useState<string>();
   const form = useForm<z.infer<typeof scheduleFormSchema>>({
     resolver: zodResolver(scheduleFormSchema),
     defaultValues: {
@@ -71,6 +73,8 @@ export function ScheduleForm({
       form.setError("root", {
         message: "There was an error saving your schedule",
       });
+    } else {
+      setSuccessMessage("Schedule saved!");
     }
   }
 
@@ -84,6 +88,9 @@ export function ScheduleForm({
           <div className="text-destructive text-sm">
             {form.formState.errors.root.message}
           </div>
+        )}
+        {successMessage && (
+          <div className="text-green-500 text-sm">{successMessage}</div>
         )}
         <FormField
           control={form.control}

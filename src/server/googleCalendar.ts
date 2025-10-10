@@ -2,7 +2,44 @@ import "use-server"
 
 import { clerkClient } from "@clerk/nextjs/server"
 import { google } from "googleapis"
+import { endOfDay, startOfDay } from "date-fns"
 
+export async function getCalendarEventTimes(
+  clerkUserId: string,
+  { start, end }: { start: Date; end: Date }
+) {
+  const oAuthClient = await getOAuthClient(clerkUserId)
+
+  const events = await google.calendar("v3").events.list({
+    calendarId: "primary",
+    eventTypes: ["default"],
+    singleEvents: true,
+    timeMin: start.toISOString(),
+    timeMax: end.toISOString(),
+    maxResults: 2500,
+    auth: oAuthClient,
+  })
+
+  return (
+    events.data.items
+      ?.map((event: { start: { date: null; dateTime: string | number | Date | null; }; end: { date: null; dateTime: string | number | Date | null; }; }) => {
+        if (event.start?.date != null && event.end?.date != null) {
+          return {
+            start: startOfDay(event.start.date),
+            end: endOfDay(event.end.date),
+          }
+        }
+
+        if (event.start?.dateTime != null && event.end?.dateTime != null) {
+          return {
+            start: new Date(event.start.dateTime),
+            end: new Date(event.end.dateTime),
+          }
+        }
+      })
+      .filter((date: null) => date != null) || []
+  )
+}
 
 async function getOAuthClient(clerkUserId: string) {
   const clerk = await clerkClient();

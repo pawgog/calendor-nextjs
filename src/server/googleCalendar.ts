@@ -22,7 +22,7 @@ export async function getCalendarEventTimes(
 
   return (
     events.data.items
-      ?.map((event: { start: { date: null; dateTime: string | number | Date | null; }; end: { date: null; dateTime: string | number | Date | null; }; }) => {
+      ?.map((event) => {
         if (event.start?.date != null && event.end?.date != null) {
           return {
             start: startOfDay(event.start.date),
@@ -37,7 +37,7 @@ export async function getCalendarEventTimes(
           }
         }
       })
-      .filter((date: null) => date != null) || []
+      .filter((date) => date !== undefined) || []
   )
 }
 

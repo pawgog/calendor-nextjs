@@ -24,6 +24,7 @@
     "clsx": "^2.1.1",
     "core-js": "^3.45.1",
     "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
     "drizzle-orm": "^0.44.4",
     "googleapis": "^164.1.0",
     "lucide-react": "^0.525.0",

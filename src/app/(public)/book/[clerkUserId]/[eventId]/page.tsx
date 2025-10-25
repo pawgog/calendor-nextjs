@@ -1,10 +1,7 @@
-import { MeetingForm } from "@/components/forms/MeetingForm";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -46,5 +43,23 @@ export default async function BookEventPage({
     event
   );
 
-  return null;
+  if (validTimes.length === 0) {
+    return <NoTimeSlots event={event} calendarUser={calendarUser} />;
+  }
+
+  return (
+    <Card className="max-w-4xl mx-auto">
+      <CardHeader>
+        <CardTitle>
+          Book {event.name} with {calendarUser.fullName}
+        </CardTitle>
+        {event.description && (
+          <CardDescription>{event.description}</CardDescription>
+        )}
+      </CardHeader>
+      <CardContent>
+        <div>Available time slots will be displayed here.</div>
+      </CardContent>
+    </Card>
+  );
 }

@@ -1,10 +1,3 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { db } from "@/drizzle/db";
 import { getValidTimesFromSchedule } from "@/lib/getValidTimesFromSchedule";
 import { clerkClient } from "@clerk/nextjs/server";
@@ -15,6 +8,15 @@ import {
   roundToNearestMinutes,
 } from "date-fns";
 import { notFound } from "next/navigation";
+
+import { MeetingForm } from "@/components/forms/MeetingForm";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export const revalidate = 0;
 
@@ -58,7 +60,11 @@ export default async function BookEventPage({
         )}
       </CardHeader>
       <CardContent>
-        <div>Available time slots will be displayed here.</div>
+        <MeetingForm
+          validTimes={validTimes}
+          eventId={event.id}
+          clerkUserId={clerkUserId}
+        />
       </CardContent>
     </Card>
   );

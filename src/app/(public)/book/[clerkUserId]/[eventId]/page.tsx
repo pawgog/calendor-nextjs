@@ -24,10 +24,11 @@ import { Button } from "@/components/ui/button";
 export const revalidate = 0;
 
 export default async function BookEventPage({
-  params: { clerkUserId, eventId },
+  params,
 }: {
   params: { clerkUserId: string; eventId: string };
 }) {
+  const { clerkUserId, eventId } = await params;
   const event = await db.query.EventTable.findFirst({
     where: ({ clerkUserId: userIdCol, isActive, id }, { eq, and }) =>
       and(eq(isActive, true), eq(userIdCol, clerkUserId), eq(id, eventId)),

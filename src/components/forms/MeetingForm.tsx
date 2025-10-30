@@ -1,0 +1,99 @@
+"use client";
+
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import Link from "next/link";
+import { Button } from "../ui/button";
+import { meetingFormSchema } from "@/schema/meetings";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { formatTimezoneOffset } from "@/lib/formatters";
+import { createMeeting } from "@/server/actions/meetings";
+
+export function MeetingForm({
+  validTimes,
+  eventId,
+  clerkUserId,
+}: {
+  validTimes: Date[];
+  eventId: string;
+  clerkUserId: string;
+}) {
+  const form = useForm<z.infer<typeof meetingFormSchema>>({
+    resolver: zodResolver(meetingFormSchema),
+    defaultValues: {
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof meetingFormSchema>) {
+    const data = await createMeeting();
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex gap-6 flex-col"
+      >
+        {form.formState.errors.root && (
+          <div className="text-destructive text-sm">
+            {form.formState.errors.root.message}
+          </div>
+        )}
+        <FormField
+          control={form.control}
+          name="timezone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Timezone</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {Intl.supportedValuesOf("timeZone").map((timezone) => (
+                    <SelectItem key={timezone} value={timezone}>
+                      {timezone}
+                      {` (${formatTimezoneOffset(timezone)})`}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="flex gap-2 justify-end">
+          <Button
+            disabled={form.formState.isSubmitting}
+            type="button"
+            asChild
+            variant="outline"
+          >
+            <Link href={`/book/${clerkUserId}`}>Cancel</Link>
+          </Button>
+          <Button disabled={form.formState.isSubmitting} type="submit">
+            Schedule
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+}

@@ -37,10 +37,21 @@ export async function getValidTimesFromSchedule(
 
   if (schedule == null) return []
 
-  const groupedAvailabilities = Object.groupBy(
-    schedule.availabilities,
-    a => a.dayOfWeek
-  )
+const groupedAvailabilities = schedule.availabilities.reduce(
+  (
+    acc: Partial<
+      Record<
+        (typeof DAYS_OF_WEEK_IN_ORDER)[number],
+        (typeof ScheduleAvailabilityTable.$inferSelect)[]
+      >
+    >,
+    a
+  ) => {
+    (acc[a.dayOfWeek] ??= []).push(a);
+    return acc;
+  },
+  {}
+);
 
   const eventTimes = await getCalendarEventTimes(event.clerkUserId, {
     start,

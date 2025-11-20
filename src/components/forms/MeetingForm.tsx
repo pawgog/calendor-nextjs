@@ -23,6 +23,11 @@ import {
 } from "../ui/select";
 import { formatTimezoneOffset } from "@/lib/formatters";
 import { createMeeting } from "@/server/actions/meetings";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "../ui/calendar";
+import { cn } from "@/lib/utils";
+import { isSameDay } from "date-fns";
 
 export function MeetingForm({
   validTimes,
@@ -80,6 +85,51 @@ export function MeetingForm({
             </FormItem>
           )}
         />
+        <div className="flex gap-4 flex-col md:flex-row">
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <Popover>
+                <FormItem className="flex-1">
+                  <FormLabel>Date</FormLabel>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "pl-3 text-left font-normal flex w-full",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          formatDate(field.value)
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        !validTimesInTimezone.some((time) =>
+                          isSameDay(date, time)
+                        )
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                  <FormMessage />
+                </FormItem>
+              </Popover>
+            )}
+          />
+        </div>
         <div className="flex gap-2 justify-end">
           <Button
             disabled={form.formState.isSubmitting}

@@ -21,13 +21,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { formatTimezoneOffset } from "@/lib/formatters";
+import { formatDate, formatTimezoneOffset } from "@/lib/formatters";
 import { createMeeting } from "@/server/actions/meetings";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { cn } from "@/lib/utils";
 import { isSameDay } from "date-fns";
+import { useMemo } from "react";
+import { toZonedTime } from "date-fns-tz";
 
 export function MeetingForm({
   validTimes,
@@ -44,6 +46,11 @@ export function MeetingForm({
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     },
   });
+
+  const timezone = form.watch("timezone");
+  const validTimesInTimezone = useMemo(() => {
+    return validTimes.map((date) => toZonedTime(date, timezone));
+  }, [validTimes, timezone]);
 
   async function onSubmit(values: z.infer<typeof meetingFormSchema>) {
     const data = await createMeeting();

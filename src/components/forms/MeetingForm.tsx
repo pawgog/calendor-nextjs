@@ -48,6 +48,7 @@ export function MeetingForm({
   });
 
   const timezone = form.watch("timezone");
+  const date = form.watch("date");
   const validTimesInTimezone = useMemo(() => {
     return validTimes.map((date) => toZonedTime(date, timezone));
   }, [validTimes, timezone]);
@@ -134,6 +135,48 @@ export function MeetingForm({
                   <FormMessage />
                 </FormItem>
               </Popover>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="startTime"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>Time</FormLabel>
+                <Select
+                  disabled={date == null || timezone == null}
+                  onValueChange={(value) =>
+                    field.onChange(new Date(Date.parse(value)))
+                  }
+                  defaultValue={field.value?.toISOString()}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue
+                        placeholder={
+                          date == null || timezone == null
+                            ? "Select a date/timezone first"
+                            : "Select a meeting time"
+                        }
+                      />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {validTimesInTimezone
+                      .filter((time) => isSameDay(time, date))
+                      .map((time) => (
+                        <SelectItem
+                          key={time.toISOString()}
+                          value={time.toISOString()}
+                        >
+                          {formatTimeString(time)}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+
+                <FormMessage />
+              </FormItem>
             )}
           />
         </div>

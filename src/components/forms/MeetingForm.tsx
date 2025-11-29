@@ -21,7 +21,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { formatDate, formatTimezoneOffset } from "@/lib/formatters";
+import {
+  formatDate,
+  formatTimeString,
+  formatTimezoneOffset,
+} from "@/lib/formatters";
 import { createMeeting } from "@/server/actions/meetings";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { CalendarIcon } from "lucide-react";

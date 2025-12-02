@@ -34,6 +34,8 @@ import { cn } from "@/lib/utils";
 import { isSameDay } from "date-fns";
 import { useMemo } from "react";
 import { toZonedTime } from "date-fns-tz";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 
 export function MeetingForm({
   validTimes,
@@ -184,6 +186,47 @@ export function MeetingForm({
             )}
           />
         </div>
+        <div className="flex gap-4 flex-col md:flex-row">
+          <FormField
+            control={form.control}
+            name="guestName"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>Your Name</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="guestEmail"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>Your Email</FormLabel>
+                <FormControl>
+                  <Input type="email" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <FormField
+          control={form.control}
+          name="guestNotes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Notes</FormLabel>
+              <FormControl>
+                <Textarea className="resize-none" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="flex gap-2 justify-end">
           <Button
             disabled={form.formState.isSubmitting}

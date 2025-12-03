@@ -60,7 +60,17 @@ export function MeetingForm({
   }, [validTimes, timezone]);
 
   async function onSubmit(values: z.infer<typeof meetingFormSchema>) {
-    const data = await createMeeting();
+    const data = await createMeeting({
+      ...values,
+      eventId,
+      clerkUserId,
+    });
+
+    if (data?.error) {
+      form.setError("root", {
+        message: "There was an error saving your event",
+      });
+    }
   }
 
   return (

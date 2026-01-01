@@ -63,7 +63,7 @@ export function ScheduleForm({
 
   const groupedAvailabilityFields = Object.groupBy(
     availabilityFields.map((field, index) => ({ ...field, index })),
-    (availability) => availability.dayOfWeek
+    (availability) => availability.dayOfWeek,
   );
 
   async function onSubmit(values: z.infer<typeof scheduleFormSchema>) {
@@ -126,7 +126,7 @@ export function ScheduleForm({
               <div className="flex flex-col gap-2">
                 <Button
                   type="button"
-                  className="size-6 p-1"
+                  className="size-6 has-[>svg]:px-0 py-0"
                   variant="outline"
                   onClick={() => {
                     addAvailability({
@@ -189,26 +189,26 @@ export function ScheduleForm({
                       <FormMessage>
                         {
                           form.formState.errors.availabilities?.at?.(
-                            field.index
+                            field.index,
                           )?.root?.message
                         }
                       </FormMessage>
                       <FormMessage>
                         {
                           form.formState.errors.availabilities?.at?.(
-                            field.index
+                            field.index,
                           )?.startTime?.message
                         }
                       </FormMessage>
                       <FormMessage>
                         {
                           form.formState.errors.availabilities?.at?.(
-                            field.index
+                            field.index,
                           )?.endTime?.message
                         }
                       </FormMessage>
                     </div>
-                  )
+                  ),
                 )}
               </div>
             </Fragment>

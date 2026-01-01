@@ -32,7 +32,7 @@ export default async function EventsPage() {
     <>
       <div className="flex gap-4 items-baseline">
         <h1 className="text-3xl lg:text-4xl xl:text-5xl font-semibold mb-6">
-          Events
+          All Events
         </h1>
         <Button asChild>
           <Link href="/events/new">

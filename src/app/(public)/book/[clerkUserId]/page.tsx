@@ -1,3 +1,4 @@
+import NavigationHeader from "@/components/navigation/NavigationHeader";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -34,6 +35,7 @@ export default async function BookingPage({
 
   return (
     <div className="max-w-5xl mx-auto">
+      <NavigationHeader />
       <div className="text-4xl md:text-5xl font-semibold mb-4 text-center">
         {fullName}
       </div>

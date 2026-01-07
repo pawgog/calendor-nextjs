@@ -10,19 +10,20 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
-        destructiveGhost:
-          "text-destructive hover:bg-destructive hover:text-destructive-foreground",
-        outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "bg-indigo-600 text-white shadow-sm hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-400",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+          "bg-white text-indigo-700 shadow-sm hover:bg-indigo-50 focus-visible:ring-2 focus-visible:ring-white/60",
+        outline:
+          "border bg-background shadow-xs hover:bg-accent hover:text-indigo-700 text-indigo-500 hover:bg-white/20 backdrop-blur focus-visible:ring-2 focus-visible:ring-white/40",
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "text-indigo-700 underline-offset-4 hover:text-indigo-500 hover:underline",
+        destructive:
+          "bg-red-600 text-white shadow-sm hover:bg-red-500 focus-visible:ring-2 focus-visible:ring-red-400",
+        destructiveGhost:
+          "text-destructive hover:text-white hover:bg-destructive",
       },
+
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
         sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
@@ -34,11 +35,12 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 export interface ButtonProps
-  extends React.HTMLAttributes<HTMLButtonElement>,
+  extends
+    React.HTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
 }

@@ -122,8 +122,8 @@ export function MeetingForm({
                       <Button
                         variant="outline"
                         className={cn(
-                          "pl-3 text-left font-normal flex w-full",
-                          !field.value && "text-muted-foreground"
+                          "pl-3 text-left font-normal flex w-full text-black hover:text-accent-foreground",
+                          !field.value && "text-muted-foreground",
                         )}
                       >
                         {field.value ? (
@@ -142,7 +142,7 @@ export function MeetingForm({
                       onSelect={field.onChange}
                       disabled={(date) =>
                         !validTimesInTimezone.some((time) =>
-                          isSameDay(date, time)
+                          isSameDay(date, time),
                         )
                       }
                       initialFocus
@@ -190,7 +190,6 @@ export function MeetingForm({
                       ))}
                   </SelectContent>
                 </Select>
-
                 <FormMessage />
               </FormItem>
             )}

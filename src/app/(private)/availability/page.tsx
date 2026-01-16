@@ -17,7 +17,7 @@ export default async function SchedulePage() {
   return (
     <Card className="max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>Schedule</CardTitle>
+        <CardTitle>Schedule weekly availability</CardTitle>
       </CardHeader>
       <CardContent>
         <ScheduleForm schedule={schedule} />
